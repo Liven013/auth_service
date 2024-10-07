@@ -1,7 +1,7 @@
 package handler
 
 import (
-	db "auth_service/internal/database"
+	"auth_service/internal/db"
 	"auth_service/internal/models"
 	"auth_service/internal/services"
 	"fmt"
@@ -14,8 +14,10 @@ import (
 
 func GetUsers(c *gin.Context) {
 	var users []models.User
-	result := db.DB.Find(&users)
-	fmt.Println(result.RowsAffected)
+	users, err := db.DB.GetAll()
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("not found DB %s", err)})
+	}
 	c.IndentedJSON(http.StatusOK, users)
 }
 
@@ -30,8 +32,10 @@ func Login(c *gin.Context) {
 	}
 
 	//поиск пользователя с данным guid
-	var existingUser models.User
-	db.DB.Where("guid = ?", id).First(&existingUser)
+	existingUser, err := db.DB.GetOne(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("error with finding %s", id)})
+	}
 	if existingUser.GUID == "" {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("user id:%s does not exist", id)})
 		return

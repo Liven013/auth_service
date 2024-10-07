@@ -1,7 +1,6 @@
 package main
 
 import (
-	db "auth_service/internal/database"
 	"auth_service/internal/handler"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +20,5 @@ func getRouter() *gin.Engine {
 func main() {
 	router := getRouter()
 
-	db.ConnectDB()
 	router.Run("localhost:8080")
 }

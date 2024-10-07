@@ -7,7 +7,7 @@ import (
 
 	"time"
 
-	db "auth_service/internal/database"
+	db "auth_service/internal/db"
 	"auth_service/internal/models"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -20,11 +20,7 @@ const (
 )
 
 func FindUserByGUID(userGUID string) (models.User, error) {
-	var user models.User
-	if err := db.DB.First(&user, "guid = ?", userGUID).Error; err != nil {
-		return models.User{}, err
-	}
-	return user, nil
+	return db.DB.GetOne(userGUID)
 }
 
 func GenerateAccessToken(userGUID string, timeCreated int64) (string, error) {
@@ -74,13 +70,13 @@ func GeneratePairToken(user models.User, ip string) (string, string, error) {
 
 func StoreRefreshToken(userGUID string, refreshToken string) error {
 	hash := hashToken(refreshToken)
-	var user models.User
-	if err := db.DB.First(&user, "guid = ?", userGUID).Error; err != nil {
+	user, err := db.DB.GetOne(userGUID)
+	if err != nil {
 		return err
 	}
 
 	user.RefreshTokenHash = string(hash)
-	return db.DB.Save(&user).Error
+	return db.DB.Update(user)
 }
 
 func hashToken(token string) string {
@@ -207,8 +203,7 @@ func RefreshTokens(providedRefreshToken, providedAcessToken, clientIP string) (s
 		return "", "", err
 	}
 
-	var user models.User
-	err = db.DB.First(&user, "guid = ?", guid).Error
+	user, err := db.DB.GetOne(guid)
 	if err != nil {
 		return "", "", err
 	}
