@@ -13,7 +13,6 @@ func getRouter() *gin.Engine {
 	router.GET("/auth/refresh/:ip", handler.RefreshTokens)
 
 	router.GET("/users", handler.GetUsers)
-	router.GET("/user/cookie", handler.Cookies)
 	return router
 }
 

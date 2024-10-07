@@ -6,9 +6,6 @@ curl http://localhost:8080/auth/login/11111/32 \
 
 ###
 curl http://localhost:8080/auth/refresh/11111 \
-    --H "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMiIsImV4cCI6MTcyODEzNjg2OCwidGltZSI6MTcyODA1MDQ2OH0.eotYlUsFZKnaAYTNUianxckHi6mjz8l_1E219FkKL23WwTLORanJI7xxlU9bxg7pqHax05fRRJEvFsgjjO9dcQ"
+    --H "Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMiIsImV4cCI6MTcyODQxNTQxNSwidGltZSI6MTcyODMyOTAxNX0.HX-CX7-Wf64fjG23MKMEh8SGMU4K1t0K75Ak1xtWXtwRm6TtQ3tpaH-S1Mem5LMs8VtLV_yzyEMfvpbwu4lfUg"
 ###
 curl http://localhost:8080/users
-
-###
-curl http://localhost:8080/users/cookies

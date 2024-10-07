@@ -2,13 +2,12 @@ package db
 
 import (
 	"auth_service/internal/models"
-	"fmt"
 )
 
-func (ps PostgresStorage) GetOne(guid string) (models.User, error) {
+func (ps PostgresStorage) GetOne(guid string) models.User {
 	var user models.User
-	result := ps.db.First(&user, "guid = ?", guid).Error
-	return user, fmt.Errorf(result.Error())
+	ps.db.First(&user, "guid = ?", guid)
+	return user
 }
 
 func (ps PostgresStorage) GetAll() ([]models.User, error) {

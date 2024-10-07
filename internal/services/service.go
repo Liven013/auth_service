@@ -19,7 +19,7 @@ const (
 	secretKey          = "secret_key" // безопасное хранение ключа
 )
 
-func FindUserByGUID(userGUID string) (models.User, error) {
+func FindUserByGUID(userGUID string) models.User {
 	return db.DB.GetOne(userGUID)
 }
 
@@ -70,11 +70,7 @@ func GeneratePairToken(user models.User, ip string) (string, string, error) {
 
 func StoreRefreshToken(userGUID string, refreshToken string) error {
 	hash := hashToken(refreshToken)
-	user, err := db.DB.GetOne(userGUID)
-	if err != nil {
-		return err
-	}
-
+	user := db.DB.GetOne(userGUID)
 	user.RefreshTokenHash = string(hash)
 	return db.DB.Update(user)
 }
@@ -203,8 +199,8 @@ func RefreshTokens(providedRefreshToken, providedAcessToken, clientIP string) (s
 		return "", "", err
 	}
 
-	user, err := db.DB.GetOne(guid)
-	if err != nil {
+	user := db.DB.GetOne(guid)
+	if user.GUID == "" {
 		return "", "", err
 	}
 

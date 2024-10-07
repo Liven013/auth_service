@@ -32,10 +32,8 @@ func Login(c *gin.Context) {
 	}
 
 	//поиск пользователя с данным guid
-	existingUser, err := db.DB.GetOne(id)
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("error with finding %s", id)})
-	}
+	existingUser := db.DB.GetOne(id)
+
 	if existingUser.GUID == "" {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("user id:%s does not exist", id)})
 		return
@@ -93,12 +91,4 @@ func RefreshTokens(c *gin.Context) {
 	c.SetCookie("RefreshToken", newRefreshToken, int(time.Now().Add(services.RefreshTokenExpiry).Unix()), "/", "localhost", false, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"success": "refresh tokens complete: \n Refrsh: " + newRefreshToken + "\n Access" + newAccessToken})
-}
-
-func Cookies(c *gin.Context) {
-	cookie, err := c.Cookie("RefreshToken")
-	if err != nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"error": "not found cookies"})
-	}
-	c.IndentedJSON(http.StatusOK, cookie)
 }
