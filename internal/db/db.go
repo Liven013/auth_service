@@ -4,14 +4,16 @@ import (
 	"log"
 
 	"auth_service/internal/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Storage interface {
-	GetOne(string) (models.User, error)
+	GetOne(string) models.User
 	GetAll() ([]models.User, error)
 	Update(models.User) error
+	Create(models.User) error
 }
 
 var DB = ConnectDB()

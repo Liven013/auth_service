@@ -19,3 +19,7 @@ func (ps PostgresStorage) GetAll() ([]models.User, error) {
 func (ps PostgresStorage) Update(userUpdate models.User) error {
 	return ps.db.Save(&userUpdate).Error
 }
+
+func (ps PostgresStorage) Create(user models.User) error {
+	return ps.db.Create(&user).Error
+}
