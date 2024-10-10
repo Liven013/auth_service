@@ -19,11 +19,10 @@ type Storage interface {
 var DB = ConnectDB()
 
 type PostgresStorage struct {
-	db *gorm.DB
+	DataBase *gorm.DB
 }
 
 func ConnectDB() PostgresStorage {
-	var err error
 	dsn := "user=postgres password=1 dbname=auth port=5432 sslmode=disable"
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -34,5 +33,5 @@ func ConnectDB() PostgresStorage {
 	if err != nil {
 		log.Fatalf("Ошибка миграции базы данных: %v", err)
 	}
-	return PostgresStorage{db: DB}
+	return PostgresStorage{DataBase: DB}
 }

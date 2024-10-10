@@ -9,17 +9,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func ConnectTestDB() (db.Storage, error) {
+func ConnectTestDB() db.Storage {
 	dsn := "user=postgres password=1 dbname=auth port=5432 sslmode=disable"
-	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		return db.PostgresStorage{db: DB}, err
-	}
-
+	DB, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	return db.PostgresStorage{DataBase: DB}
 }
 
-var testdb db.Storage = db.ConnectTestDB()
+var testdb db.Storage = ConnectTestDB()
+
 var testUser models.User = models.User{
 	GUID:             "00",
 	Email:            "e@mail.com",
@@ -28,12 +25,9 @@ var testUser models.User = models.User{
 }
 
 func TestMain(m *testing.M) {
-
 	router := getRouter()
 	router.Run("localhost:8080")
-
-	testdb.Create(testUser)
 }
 func TestGetUsers(t *testing.T) {
-
+	testdb.Create(testUser)
 }

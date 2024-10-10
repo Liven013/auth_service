@@ -7,7 +7,7 @@ import (
 
 	"time"
 
-	db "auth_service/internal/db"
+	"auth_service/internal/db"
 	"auth_service/internal/models"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -46,20 +46,22 @@ func GenerateRefreshToken(userGUID, userIP string, timeCreatedAccess int64) (str
 	return token.SignedString([]byte(secretKey))
 }
 
+// Функция GeneratePairToken с использованием интерфейса
 func GeneratePairToken(user models.User, ip string) (string, string, error) {
+	tg := RealTokenGenerator{}
 	timeCreated := time.Now().Unix()
 
-	accessToken, err := GenerateAccessToken(user.GUID, timeCreated)
+	accessToken, err := tg.GenerateAccessToken(user.GUID, timeCreated)
 	if err != nil {
 		return "", "", fmt.Errorf("accessToken error")
 	}
 
-	refreshToken, err := GenerateRefreshToken(user.GUID, ip, timeCreated)
+	refreshToken, err := tg.GenerateRefreshToken(user.GUID, ip, timeCreated)
 	if err != nil {
 		return "", "", fmt.Errorf("refreshToken error")
 	}
 
-	err = StoreRefreshToken(user.GUID, refreshToken)
+	err = tg.StoreRefreshToken(user.GUID, refreshToken)
 	if err != nil {
 		fmt.Println("ошибка записи в БД")
 		return "", "", fmt.Errorf("store error")

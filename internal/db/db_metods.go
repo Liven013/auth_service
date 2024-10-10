@@ -6,20 +6,20 @@ import (
 
 func (ps PostgresStorage) GetOne(guid string) models.User {
 	var user models.User
-	ps.db.First(&user, "guid = ?", guid)
+	ps.DataBase.First(&user, "guid = ?", guid)
 	return user
 }
 
 func (ps PostgresStorage) GetAll() ([]models.User, error) {
 	var users []models.User
-	result := ps.db.Find(&users)
+	result := ps.DataBase.Find(&users)
 	return users, result.Error
 }
 
 func (ps PostgresStorage) Update(userUpdate models.User) error {
-	return ps.db.Save(&userUpdate).Error
+	return ps.DataBase.Save(&userUpdate).Error
 }
 
 func (ps PostgresStorage) Create(user models.User) error {
-	return ps.db.Create(&user).Error
+	return ps.DataBase.Create(&user).Error
 }
